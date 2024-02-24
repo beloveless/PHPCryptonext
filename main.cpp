@@ -14,10 +14,6 @@
 #include <dirent.h>
 #include <mcrypt.h>
 
-/**
- *  tell the compiler that the get_module is a pure C function
- */
-
 using namespace std;
 string variable_name;
 int counter = 0;
@@ -52,7 +48,6 @@ bool CheckSubstring(std::string firstString, std::string secondString)
     for (size_t i = 0; i < firstString.size(); i++)
     {
         size_t j = 0;
-        // If the first characters match
         if (firstString[i] == secondString[j])
         {
             int k = i;
@@ -63,7 +58,7 @@ bool CheckSubstring(std::string firstString, std::string secondString)
             }
             if (j == secondString.size())
                 return true;
-            else // Re-initialize i to its original value
+            else
                 i = k;
         }
     }
@@ -72,21 +67,11 @@ bool CheckSubstring(std::string firstString, std::string secondString)
 
 string random_string(int length)
 {
-    /*<< We first define the characters that we're going
-         to allow.  This is pretty much just the characters
-         on a standard keyboard.
-    >>*/
     std::string tmp_s;
     std::string chars(
         "abcdefghijklmnopqrstuvwxyz"
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-    /*<< We use __random_device as a source of entropy, since we want
-         passwords that are not predictable.
-    >>*/
     boost::random::random_device rng;
-    /*<< Finally we select random characters from the
-         string and append them to the result string.
-    >>*/
     boost::random::uniform_int_distribution<> index_dist(0, chars.size() - 1);
     for (int i = 0; i < length; ++i)
     {
@@ -97,30 +82,19 @@ string random_string(int length)
 
 bool in_array(const string &needle, const vector<string> &haystack)
 {
-    int max = haystack.size();
-
-    if (max == 0)
-        return false;
-
-    for (int i = 0; i < max; i++)
-        if (haystack[i] == needle)
+    for (const auto &elem : haystack)
+    {
+        if (elem == needle)
             return true;
+    }
     return false;
 }
 
 size_t strpos(const string &haystack, const string &needle)
 {
-    int sleng = haystack.length();
-    int nleng = needle.length();
-
-    if (sleng == 0 || nleng == 0)
-        return string::npos;
-
-    for (int i = 0, j = 0; i < sleng; j = 0, i++)
+    for (size_t i = 0; i < haystack.size(); ++i)
     {
-        while (i + j < sleng && j < nleng && haystack[i + j] == needle[j])
-            j++;
-        if (j == nleng)
+        if (haystack.substr(i, needle.size()) == needle)
             return i;
     }
     return string::npos;
@@ -128,23 +102,16 @@ size_t strpos(const string &haystack, const string &needle)
 
 std::vector<std::string> glob(const std::string &pattern)
 {
-    glob_t glob_result = {0}; // zero initialize
-
-    // do the glob operation
+    glob_t glob_result = {0};
     int return_value = ::glob(pattern.c_str(), GLOB_TILDE, NULL, &glob_result);
 
     if (return_value != 0)
         throw std::runtime_error(std::strerror(errno));
 
-    // collect all the filenames into a std::vector<std::string>
-    // using the vector constructor that takes two iterators
     std::vector<std::string> filenames(
         glob_result.gl_pathv, glob_result.gl_pathv + glob_result.gl_pathc);
 
-    // cleanup
     globfree(&glob_result);
-
-    // done
     return filenames;
 }
 
@@ -154,9 +121,9 @@ public:
     Cryptix() = default;
     virtual ~Cryptix() = default;
 
-    //obfuscation
     static string obfuskasi(string codeAwal)
     {
+        // Your obfuscation logic here
         vector<string> variable_names_before;
         vector<string> variable_names_after;
         vector<string> function_names_before;
@@ -331,6 +298,7 @@ public:
 
     static void obfuscation(Php::Parameters &params)
     {
+        // Your obfuscation logic here
         std::string type = "blowfish";
         std::string file = params[0];
 
@@ -352,6 +320,7 @@ public:
 
     static void obfus(Php::Parameters &params)
     {
+        // Your directory obfuscation logic here
         std::string type = "blowfish";
         std::string path = params[0];
 
@@ -434,6 +403,7 @@ public:
 
     static void decrypt(Php::Parameters &params)
     {
+        // Your decryption logic here
         // @todo add implementation
         std::string type = params[0];
         std::string msg = params[1];
@@ -464,6 +434,7 @@ public:
 
     static void encrypt(Php::Parameters &params)
     {
+        // Your encryption logic here
         // @todo add implementation
         std::string type = params[0];
         std::string msg = params[1];
@@ -474,6 +445,7 @@ public:
 
     static std::string blowfish_enc(std::string data, std::string key)
     {
+        // Your blowfish encryption logic here
         // Get IV length
         int ivSize = mcrypt_enc_get_iv_size(MCRYPT_BLOWFISH);
         char *iv = new char[ivSize];
@@ -525,6 +497,7 @@ public:
 
     static std::string blowfish_dec(std::string cipher, std::string key)
     {
+        // Your blowfish decryption logic here
         // Decode base64
         std::string decodedCipher = base64_decode(cipher);
 
@@ -574,6 +547,7 @@ public:
     }
 
 private:
+    // Your utility functions here
     static std::string base64_encode(const std::string &plainText)
     {
         // Encode plain text using base64
